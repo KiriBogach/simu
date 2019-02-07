@@ -1,52 +1,74 @@
-float angulo = PI/3.0;
+float angulo = 0;
+boolean lado = true;
+color robot = color(217, 255, 188);
 
 void setup() {
-  size(500, 500);
+  size(400, 500);
   strokeWeight(2);
   ellipseMode(RADIUS);
   rectMode(CENTER);
 }
 
 void draw() {
-  translate(width/2, height/2);
-  background(51);
+  background(203, 238, 243);
+
+  /*** CUELLO ***/
+  rect(width/2, height/2, 10, 90);
+  fill(robot);
+
+  /*** BRAZOS ***/
   push();
-  //translate(50 + 200, 50 + 60);
-  rotate(angulo);
-  angulo += 0.01;
-  rect(50, 50, 400, 120);
+  translate(width/2, height/2 + 100);
+  rotate(PI/3);
+  rect(-75, 40, 35, 150);
+  arc(-75, 100, 30, 30, 0, PI);
   pop();
-  /*
-  // Neck
-  stroke(102);
-  line(266, 257, 266, 162);
-  line(276, 257, 276, 162);
-  line(286, 257, 286, 162);
 
-  // Antennae
-  line(276, 155, 246, 112);
-  line(276, 155, 306, 56);
-  line(276, 155, 342, 170);
+  push();
+  translate(width/2 + 80, height/2 - 30);
+  rotate(-PI/3);
+  rect(-75, 40, 35, 150);
+  arc(-75, 100, 30, 30, 0, PI);
+  pop();
 
-  // Body
-  noStroke();
-  fill(102);
-  ellipse(264, 377, 33, 33);
-  fill(0);
-  rect(219, 257, 90, 120);
-  fill(102);
-  rect(219, 274, 90, 6);
+  /*** PIERNAS **/
+  rect(width/2 - 20, 350, 50, 200);
+  rect(width/2 - 32, 450, 80, 50);
 
-  // Head
-  fill(0);
-  ellipse(276, 155, 45, 45);
+  rect(width/2 + 20, 350, 50, 200);
+  rect(width/2 + 32, 450, 80, 50);
+
+  /*** CUERPO ***/
+  fill(robot);
+  rect(width/2, 300, 100, 100);
+  fill(0, 0, 0, 150);
+  rect(width/2 - 15, 280, 50, 15);
+  ellipse(width/2 + 25, 280, 5, 5);
+  ellipse(width/2 + 40, 280, 5, 5);
+  fill(robot);
+
+  /*** CABEZA ***/
+  push();
+  translate(width/2, height/2 - 100);
+  rotate(angulo);
+  rect(0, 0, 250, 120);
   fill(255);
-  ellipse(288, 150, 14, 14);
-  fill(0);
-  ellipse(288, 150, 3, 3);
-  fill(153);
-  ellipse(263, 148, 5, 5);
-  ellipse(296, 130, 4, 4);
-  ellipse(305, 162, 3, 3);
-  */
+  ellipse(-55, -15, 40, 40);
+  ellipse(+55, -15, 40, 40);
+  fill(robot);
+  arc(0, 25, 30, 30, 0, PI);
+  pop();
+
+  /*** LÓGICA CABEZA ***/
+  if (lado) {
+    angulo -= 0.01;
+  } else {
+    angulo += 0.01;
+  }
+
+  if (angulo < -0.4) {
+    lado = false;
+  } else if (angulo > 0.4) {
+    lado = true;
+  }
 }
