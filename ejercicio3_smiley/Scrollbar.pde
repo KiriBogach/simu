@@ -2,7 +2,6 @@ public class Scrollbar {
 	private static final int ANCHURA = 15;
 
 	private float min, max;
-	private float value;
 	private float longitud;
 
 	private PVector pos;
@@ -14,21 +13,29 @@ public class Scrollbar {
 		this.longitud = longitud;
 		this.min = min;
 		this.max = max;
-		this.value = (max - min) / 2;
 
+		float value = (max - min) / 2;
 		float value_x = map(value, min, max, pos.x, pos.x + longitud);
 		this.value_pos = new PVector(value_x, pos_y);
 	}
 
 	public void update() {
-		if (this.seleccionado && mousePressed) {
-			this.value_pos.x = mouseX;
+		float new_value_pos_x = constrain(mouseX, pos.x + ANCHURA / 2, pos.x + longitud - ANCHURA / 2) - ANCHURA / 2;
+
+		// Manteniendo
+		if (mousePressed && this.seleccionado) {
+			this.value_pos.x = new_value_pos_x;
 		} else {
-			this.seleccionado = isClickado() && mousePressed;
+			this.seleccionado = mousePressed && isClickado();
+		}
+
+		// Single click
+		if (mousePressed && isClickadoScrollbar()) {
+			this.value_pos.x = new_value_pos_x;
 		}
 	}
 	public void show() {
-		fill(255);
+		fill(150);
 		rect(pos.x, pos.y, longitud, ANCHURA);
 
 		if (this.seleccionado) {
@@ -42,6 +49,15 @@ public class Scrollbar {
 	boolean isClickado() {
 		return (mouseX > value_pos.x && mouseX < value_pos.x + ANCHURA &&
 				mouseY > value_pos.y && mouseY < value_pos.y + ANCHURA);
+	}
+
+	boolean isClickadoScrollbar() {
+		return (mouseY > value_pos.y && mouseY < value_pos.y + ANCHURA);
+	}
+
+	public float getValue() {
+		float valor = map(value_pos.x, pos.x, pos.x + longitud, min, max);
+		return valor;
 	}
 
 }
