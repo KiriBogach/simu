@@ -37,9 +37,11 @@ public class Tiburon {
     float theta = velocity.heading();
 
     pushMatrix();
+
     translate(this.location.x, this.location.y);
     rotate(theta);
     image(this.imagen, 0, 0, 300, 200);
+    
     popMatrix();
   }
 }

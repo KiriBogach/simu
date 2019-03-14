@@ -72,7 +72,7 @@ public class Pez {
     translate(this.location.x, this.location.y);
     rotate(theta);
     image(this.imagen, 0, 0, 60, 50);
-    
+
     popMatrix();
 
     strokeWeight(1);
@@ -93,6 +93,5 @@ public class Pez {
     if (this.location.y > height) {
       this.location.y = height;
     }
-      
   }
 }

@@ -18,6 +18,13 @@ float tiempoPerliNoise = 0;
 final int NUM_PECES = 20;
 final int NUM_IMAGENES_PECES = 8;
 
+/*
+  Las distintas profundidades de agua se han simulado con 'PerliNoise'.
+  El tiburón sigue un movimiento ondulatorio.
+  Los peces siguen al ratón (en sus límites) y sueltan oxígeno.
+  Las algas siguen un movimiento armónico (oscilación).
+*/
+
 /*****************************************************/
 
 void setup() {
