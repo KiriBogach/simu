@@ -1,16 +1,16 @@
 public class BotonBorrar extends Boton {
 
-	BotonBorrar(float x, float y, float ancho, float alto, Configuracion conf) {
-		super(x,y,ancho,alto,conf);
+	BotonBorrar(float x, float y, float ancho, float alto) {
+		super(x, y, ancho, alto);
 		this.titulo = "delete";
-		this.img = loadImage(this.titulo + ".png");
+		this.img = loadImage("img/" + this.titulo + ".png");
 	}
 
 	public void comportamiento() {
-		this.conf.forma = this.titulo;
+		conf.forma = this.titulo;
 	}
 
 	public boolean isSelected() {
-		return this.conf.forma.equals(this.titulo);
+		return conf.forma.equals(this.titulo);
 	}
 }

@@ -5,14 +5,11 @@ public abstract class Boton {
 	protected float ancho;
 	protected float alto;
 	protected String titulo;
-	protected Configuracion conf;
 
-
-	Boton(float x, float y, float ancho, float alto, Configuracion conf) {
+	Boton(float x, float y, float ancho, float alto) {
 		this.pos = new PVector(x, y);
 		this.ancho = ancho;
 		this.alto = alto;
-		this.conf = conf;
 	}
 
 	public void update() {
@@ -24,7 +21,7 @@ public abstract class Boton {
 			fill(255, 255, 255);
 		}
 
-		if (this.conf.mouseClicked && enCursor) {
+		if (conf.mouseClicked && enCursor) {
 			fill(200, 255, 200, 150);
 			this.comportamiento();
 		} else if (enCursor) {
@@ -33,6 +30,7 @@ public abstract class Boton {
 	}
 
 	public void show() {
+		stroke(1);
 		strokeWeight(3);
 		rect(this.pos.x, this.pos.y, this.ancho, this.alto);
 		image(this.img, this.pos.x, this.pos.y, this.ancho, this.alto);

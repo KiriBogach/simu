@@ -1,16 +1,16 @@
 public class BotonRelleno extends Boton {
 
-	BotonRelleno(float x, float y, float ancho, float alto, Configuracion conf) {
-		super(x,y,ancho,alto,conf);
+	BotonRelleno(float x, float y, float ancho, float alto) {
+		super(x, y, ancho, alto);
 		this.titulo = "relleno";
-		this.img = loadImage(this.titulo + ".png");
+		this.img = loadImage("img/" + this.titulo + ".png");
 	}
 
 	public void comportamiento() {
-		this.conf.relleno = !this.conf.relleno;
+		conf.relleno = !conf.relleno;
 	}
 
 	public boolean isSelected() {
-		return this.conf.relleno == true;
+		return conf.relleno == true;
 	}
 }
