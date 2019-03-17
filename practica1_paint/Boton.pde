@@ -32,6 +32,7 @@ public abstract class Boton {
 	public void show() {
 		stroke(1);
 		strokeWeight(3);
+		this.colorearBoton();
 		rect(this.pos.x, this.pos.y, this.ancho, this.alto);
 		image(this.img, this.pos.x, this.pos.y, this.ancho, this.alto);
 	}
@@ -39,13 +40,12 @@ public abstract class Boton {
 	public abstract boolean isSelected();
 	public abstract void comportamiento();
 
+	public void colorearBoton() {
+	}
+
 	public boolean overRect()  {
 		return (mouseX >= this.pos.x && mouseX <= this.pos.x + this.ancho &&
 		        mouseY >= this.pos.y && mouseY <= this.pos.y + this.alto);
 
 	}
-
-	/*void onClick() {
-		println(mouseX);
-	}*/
 }
