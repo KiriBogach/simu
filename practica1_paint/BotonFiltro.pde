@@ -35,6 +35,12 @@ public class BotonFiltro extends Boton {
 		case "recortar":
 			this.recortar();
 			break;
+		case "rotar":
+			this.rotar();
+			break;
+		case "mirror":
+			this.mirror();
+			break;
 		default:
 			break;
 		}
@@ -82,6 +88,35 @@ public class BotonFiltro extends Boton {
 		editor.beginDraw();
 		editor.filter(BLUR);
 		editor.endDraw();
+	}
+
+	public void rotar() {
+		PImage capture = editor.get();
+
+		editor.imageMode(CENTER);
+		editor.beginDraw();
+
+		editor.pushMatrix();
+		editor.background(255);
+		editor.translate(editor.width / 2, editor.height / 2);
+		editor.rotate(HALF_PI);
+		editor.image(capture, 0, 0);
+		editor.popMatrix();
+
+		editor.endDraw();
+		editor.imageMode(CORNER);
+	}
+
+	public void mirror() {
+		PImage capture = editor.get();
+
+		editor.beginDraw();
+
+		editor.pushMatrix();
+		editor.scale(-1.0, 1.0);
+		editor.image(capture, -capture.width, 0);
+
+		editor.popMatrix();
 	}
 
 	public void recortar() {

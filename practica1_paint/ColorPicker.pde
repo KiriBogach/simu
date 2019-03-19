@@ -1,9 +1,9 @@
 public class ColorPicker {
 
-	public int res = 20;
+	protected int resolucion = 20;
 	protected int base = 0;
-	protected int sat = 0;
-	protected int bri = 100;
+	protected int saturacion = 0;
+	protected int brillo = 100;
 	protected int xRest = 0;
 	protected int yRest = 0;
 
@@ -12,34 +12,41 @@ public class ColorPicker {
 	}
 
 	public void draw() {
-		colorMode(HSB, this.res);
+		// Utilizamos el modelo HSB para dibujar los colores más fácilmente
+		colorMode(HSB, this.resolucion);
 		noStroke();
-		for (int i = 0; i < res; i++) {
-			fill(i, res, res);
-			rect(i * width / res, 0, width / res, 40);
+
+		// Cabecera: Paleta de colores
+		for (int i = 0; i < this.resolucion; i++) {
+			fill(i, this.resolucion, this.resolucion);
+			rect(i * width / this.resolucion, 0, width / this.resolucion, 40);
 		}
 
 		translate(0, 40);
 
-		for (int x = 0; x < res; x++) {
-			for (int y = 0; y < res; y++) {
-				fill(base, x, y);
-				rect(x * (width / res), y * (width / res), width / res, width / res);
+		// Cuerpo: Colores de la paleta seleccionado
+		for (int x = 0; x < this.resolucion; x++) {
+			for (int y = 0; y < this.resolucion; y++) {
+				fill(this.base, x, y);
+				rect(x * (width / this.resolucion), y * (width / this.resolucion), width / this.resolucion, width / this.resolucion);
 			}
 		}
+
+		// Manejamos el evento del click y su comportamiento
 		if (mousePressed && mouseY > 45) {
 			noCursor();
-			xRest = mouseX;
-			yRest = mouseY;
-			sat = (int)map(xRest, 0, width, 0, res);
-			bri = (int)map(yRest, 0, width, 0, res);
+			this.xRest = mouseX;
+			this.yRest = mouseY;
+			this.saturacion = (int)map(this.xRest, 0, width, 0, this.resolucion);
+			this.brillo = (int)map(this.yRest, 0, width, 0, this.resolucion);
 
 			if (mouseButton == 37) {
 				guardarConfigBorde();
 			} else if (mouseButton == 39) {
 				guardarConfigRelleno();
 			}
-			fill(base, sat, bri);
+
+			fill(this.base, this.saturacion, this.brillo);
 
 			if (mouseY < 200) {
 				stroke(3, 0, 21);
@@ -56,11 +63,11 @@ public class ColorPicker {
 			cursor();
 		}
 
-		fill(base, map(xRest, 0, width, 0, res), map(yRest, 0, width, 0, res));
+		fill(this.base, map(this.xRest, 0, width, 0, this.resolucion), map(this.yRest, 0, width, 0, this.resolucion));
 
 		rect(0, 400, width, 60);
 
-
+		// Mostramos información al usuario
 		fill(0);
 		text("[boton enter] salir seleccion", 300, height - 110);
 		text("[click iquierdo] color borde", 300, height - 80);
@@ -70,25 +77,27 @@ public class ColorPicker {
 
 	void clicked() {
 		if (mouseY < 40) {
-			base = (int)map(mouseX, 0, width, 0, res - 1);
+			this.base = (int)map(mouseX, 0, width, 0, this.resolucion - 1);
 		}
 	}
 
+	// Guardamos el color relleno
 	public void guardarConfigRelleno() {
-		float s = map(xRest, 0, width, 0, res);
-		float b = map(yRest, 0, width, 0, res);
+		float s = map(this.xRest, 0, width, 0, this.resolucion);
+		float b = map(this.yRest, 0, width, 0, this.resolucion);
 
-		conf.colorRelleno = color(base, s, b);
-		fill(base, s, b);
+		conf.colorRelleno = color(this.base, s, b);
+		fill(this.base, s, b);
 		text("RELLENO", 380, height - 310);
 	}
 
+	// Guardamos el color borde
 	public void guardarConfigBorde() {
-		float s = map(xRest, 0, width, 0, res);
-		float b = map(yRest, 0, width, 0, res);
-		conf.colorBorde = color(base, s, b);
+		float s = map(this.xRest, 0, width, 0, this.resolucion);
+		float b = map(this.yRest, 0, width, 0, this.resolucion);
 
-		fill(base, s, b);
+		conf.colorBorde = color(this.base, s, b);
+		fill(this.base, s, b);
 		text("BORDE", 380, height - 310);
 	}
 

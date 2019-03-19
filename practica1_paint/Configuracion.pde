@@ -1,5 +1,7 @@
 public class Configuracion {
 
+	// Clase que mantiene guardada toda la configuración de los elementos
+	
 	public String forma = "";
 	public boolean relleno = false;
 	public boolean mouseClicked = false;
@@ -13,5 +15,7 @@ public class Configuracion {
 	public PVector recorte1 = null;
 
 	public float grosor = 1;
+
+	public float elementSize = 100;
 
 }

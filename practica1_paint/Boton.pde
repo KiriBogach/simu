@@ -5,6 +5,10 @@ public abstract class Boton {
 	protected float ancho;
 	protected float alto;
 	protected String titulo;
+	protected boolean enCursor;
+
+	// Clase abstracta con el patrón del método plantilla
+	// Heredan todas las clases llamadas Boton*
 
 	Boton(float x, float y, float ancho, float alto) {
 		this.pos = new PVector(x, y);
@@ -13,7 +17,7 @@ public abstract class Boton {
 	}
 
 	public void update() {
-		boolean enCursor = this.overRect();
+		this.enCursor = this.overRect();
 
 		if (this.isSelected()) {
 			fill(200, 255, 200);
@@ -21,10 +25,10 @@ public abstract class Boton {
 			fill(255, 255, 255);
 		}
 
-		if (conf.mouseClicked && enCursor) {
+		if (conf.mouseClicked && this.enCursor) {
 			fill(200, 255, 200, 150);
 			this.comportamiento();
-		} else if (enCursor) {
+		} else if (this.enCursor) {
 			fill(200, 255, 255);
 		}
 	}
@@ -32,7 +36,9 @@ public abstract class Boton {
 	public void show() {
 		stroke(1);
 		strokeWeight(3);
-		this.colorearBoton();
+		if (!this.enCursor) {
+			this.colorearBoton();
+		}
 		rect(this.pos.x, this.pos.y, this.ancho, this.alto);
 		image(this.img, this.pos.x, this.pos.y, this.ancho, this.alto);
 	}

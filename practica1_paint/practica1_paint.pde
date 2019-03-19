@@ -1,16 +1,8 @@
 /*
 	lápiz, elipse, rectángulo, color, relleno, borrar y guardar
-*/
 
-/*
 	La práctica se puede ampliar con la inclusión de otras herramientas, como grosor de línea,
 	otras figuras, texto o edición de imágenes (filtros, máscaras, recortes…)
-*/
-
-/*
-	Se pueden utilizar las librerías de Java para seleccionar ficheros
-	javax.swing.JFileChooser;
-	javax.swing.filechooser.FileNameExtensionFilter;
 */
 
 import javax.swing.JFrame;
@@ -18,26 +10,29 @@ import javax.imageio.ImageIO;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JFileChooser;
 
-final JFileChooser chooser = new JFileChooser();
-PGraphics editor;
-PImage imagenCargada;
+PGraphics editor; // Panel donde se dibuja
+final int TOPE_CONFIG = 100; // Tope entre el panel de dibujado y la cabecera
+final JFileChooser chooser = new JFileChooser(); // Selector de ficheros para leer y guardar
 
-Configuracion conf;
-ArrayList<Boton> botones;
-ArrayList<Boton> botonesFiltros;
-Boton botonRecorte;
-final int TOPE_CONFIG = 100;
+Configuracion conf; // Objeto con la configuración en tiempo real del proyecto
 
-ColorPicker colorPicker;
+// Variables globales
+ArrayList<Boton> botones; // Botones en la vista principal
+ArrayList<Boton> botonesFiltros; // Botones en la vista de filtros
+Boton botonRecorte; // Referencia al botonRecorte para lanzar el evento tras elegir el recorte
+
+ColorPicker colorPicker; // Vista de la elección de color de borde y relleno
 
 
 void setup() {
 	size(800, 800);
 	background(51);
 
+	// Se crea un filtro para tratar con imágenes
 	FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
 	chooser.setFileFilter(filter);
 
+	// Se crea el editor donde se dibujará
 	editor = createGraphics(width, height - TOPE_CONFIG);
 
 	editor.beginDraw();
@@ -45,7 +40,9 @@ void setup() {
 	editor.endDraw();
 
 	conf = new Configuracion();
+	colorPicker = new ColorPicker();
 
+	// Se crean y posicionan los botones 
 	botones = new ArrayList<Boton>();
 	botones.add(new BotonLapiz(25, 20, 60, 60));
 	botones.add(new BotonEllipse(100, 20, 60, 60));
@@ -53,7 +50,9 @@ void setup() {
 	botones.add(new BotonRelleno(250, 20, 60, 60));
 	botones.add(new BotonPaleta(325, 20, 60, 60));
 
-	botones.add(new BotonFiltros(475, 20, 60, 60));
+	botones.add(new BotonFiltro("rotar", 400, 20, 60, 60));
+
+	botones.add(new BotonFiltros(515, 20, 60, 60));
 
 	botones.add(new BotonCargar(625, 20, 60, 60));
 	botones.add(new BotonGuardar(700, 20, 60, 60));
@@ -69,14 +68,11 @@ void setup() {
 	botonesFiltros.add(new BotonGrosor("grosor2", 500, 20, 60, 60));
 	botonesFiltros.add(new BotonGrosor("grosor3", 575, 20, 60, 60));
 	botonesFiltros.add(new BotonCancelar(700, 20, 60, 60));
-
-	colorPicker = new ColorPicker();
 }
 
 
 void draw() {
-
-	// Si estamos seleccionado color solo dibujamos esa parte
+	// Si estamos seleccionado color solo dibujamos la interfaz de selección de colores
 	if (conf.inColorSelection) {
 		colorPicker.draw();
 		return;
@@ -89,14 +85,18 @@ void draw() {
 		b.show();
 	}
 
+	// Línea de separación entre cabecera y cuerpo
 	strokeWeight(5);
 	line(0, TOPE_CONFIG, width, TOPE_CONFIG);
 	strokeWeight(1);
 
+	// Dibujamos lo dibujado en el canvas
 	image(editor, 0, TOPE_CONFIG);
 
+	// Miramos si debemos dibujar o marcar el dibuajado
 	readConfig(false);
 
+	// Variable de control del clickado el ratón en un tick
 	conf.mouseClicked = false;
 }
 
@@ -117,6 +117,7 @@ void readConfig(boolean dibujar) {
 	editor.endDraw();
 }
 
+// Si se clickea dentro de la parte de dibujado, se dibuja en el canvas
 void dibujarEditor() {
 	int mouse_x = mouseX;
 	int mouse_y = mouseY - TOPE_CONFIG;
@@ -125,10 +126,10 @@ void dibujarEditor() {
 
 	editor.fill(conf.colorRelleno);
 	editor.stroke(conf.colorBorde);
+	editor.strokeWeight(conf.grosor);
 
 	switch (conf.forma) {
 	case "lapiz":
-		editor.strokeWeight(conf.grosor);
 		editor.fill(0);
 		editor.point(mouse_x, mouse_y);
 		break;
@@ -138,30 +139,31 @@ void dibujarEditor() {
 		} else {
 			editor.noFill();
 		}
-		editor.ellipse(mouse_x, mouse_y, 100, 100);
+		editor.ellipse(mouse_x, mouse_y, conf.elementSize, conf.elementSize);
 		break;
 	case "delete":
 		editor.noStroke();
+		editor.strokeWeight(1);
 		editor.fill(255);
-		editor.rect(mouse_x - 50, mouse_y - 50, 100, 100);
+		editor.rect(mouse_x - 50, mouse_y - 50, conf.elementSize, conf.elementSize);
 		break;
 	}
 
 	editor.colorMode(RGB);
 }
 
+// Si estamos en el canvas pero no hemos hecho click, mostramos el comportamiento esperado
 void marcarDibujado() {
 	colorMode(HSB);
 
 	fill(conf.colorRelleno);
 	stroke(conf.colorBorde);
+	strokeWeight(conf.grosor * 2);
 
 	switch (conf.forma) {
 	case "lapiz":
-		strokeWeight(8);
 		fill(0);
 		point(mouseX, mouseY);
-		strokeWeight(1);
 		break;
 	case "ellipse":
 		if (conf.relleno) {
@@ -169,15 +171,17 @@ void marcarDibujado() {
 		} else {
 			noFill();
 		}
-		ellipse(mouseX, mouseY, 100, 100);
+		ellipse(mouseX, mouseY, conf.elementSize, conf.elementSize);
 		break;
 	case "delete":
 		stroke(0);
+		strokeWeight(1);
 		fill(255);
-		rect(mouseX - 50, mouseY - 50, 100, 100);
+		rect(mouseX - 50, mouseY - 50, conf.elementSize, conf.elementSize);
 		break;
 	case "recorte":
 		stroke(0);
+		strokeWeight(1);
 		noFill();
 		if (conf.recorte0 != null) {
 			if (conf.recorte1 == null) {
@@ -192,6 +196,7 @@ void marcarDibujado() {
 	colorMode(RGB);
 }
 
+// Manejamos eventos al clickar con el ratón
 void mouseClicked() {
 	conf.mouseClicked = true;
 	readConfig(true);
@@ -213,10 +218,28 @@ void mouseDragged() {
 	readConfig(true);
 }
 
+// Manejamos eventos al usar el teclado
 void keyPressed() {
-	if (keyPressed) {
-		if (keyCode == ENTER) {
-			conf.inColorSelection = false;
-		}
+	if (!keyPressed) {
+		return;
 	}
+
+	switch (keyCode) {
+	case ENTER:
+		conf.inColorSelection = false;
+		break;
+	default:
+		break;
+	}
+
+	switch (key) {
+	case '+':
+		conf.elementSize++;
+		break;
+	case '-':
+		conf.elementSize--;
+	default:
+		break;
+	}
+
 }

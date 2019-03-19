@@ -12,7 +12,7 @@ public class BotonCargar extends Boton {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			println("You chose to open this file: " +
 			        chooser.getSelectedFile().getName());
-			imagenCargada = loadImage(chooser.getSelectedFile().getAbsolutePath());
+			PImage imagenCargada = loadImage(chooser.getSelectedFile().getAbsolutePath());
 
 			editor.beginDraw();
 			editor.image(imagenCargada, 0, 0);
