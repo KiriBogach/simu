@@ -1,16 +1,16 @@
 
 import processing.video.*;
 
-
 Configuracion conf; // Objeto con la configuración en tiempo real del proyecto
 
 // Variables globales
 ArrayList<Boton> botones; // Botones en la vista principal
 
-final String PATH = "sample_video_2.mp4";
+Movie mov; // Variable global del vídeo
+PImage imagenAnterior; // Variable de control de la imágen anterior
+
+final String PATH = "sample_video.mp4";
 final int SALTO = 4; // segundos de salto
-Movie mov;
-PImage imagenAnterior;
 
 void setup() {
 	size(1280, 720);
@@ -21,8 +21,10 @@ void setup() {
 	mov.loop(); // Comenzamos en bucle
 	mov.volume(1);
 
+	// Imagen anterior vacía
 	imagenAnterior = createImage(mov.width, mov.height, RGB);
 
+	// Configuramos la botonera de control del vídeo
 	botones = new ArrayList<Boton>();
 	botones.add(new BotonFiltro(200, 630, 80, 80));
 	botones.add(new BotonRewind(400, 630, 80, 80));
@@ -37,15 +39,18 @@ void movieEvent(Movie m) {
 }
 
 void draw() {
+	// Dibujamos la imagen anterior
 	image(imagenAnterior, 0, 0, width, height);
 
+	// Si está el efecto activado, lo aplicamos
 	if (conf.mostrarEfecto) {
 		blend(mov, 0, 0, mov.width, mov.height, 0, 0, mov.width, mov.height, SUBTRACT);
 	}
 
+	// Actualizamos la imagen anterior
 	imagenAnterior = mov.get(0, 0, mov.width, mov.height);
-	
 
+	// Control de los botones
 	for (Boton b : botones) {
 		b.update();
 		b.show();
